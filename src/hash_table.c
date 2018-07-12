@@ -73,7 +73,10 @@ static int ht_hash(const char* s, const int a, const int m) {
     return (int)hash;
 }
 
-//双重hash以防止冲突
+// double hash
+// s为需要hash的目标字符串
+// num_buckets 为hash表的size，即索引容量
+// attempt为尝试次数，初始为0，冲突时自增，再次生成hash
 static int ht_get_hash(const char* s, const int num_buckets,
                        const int attempt) {
     const int hash_a = ht_hash(s, HT_PRIME_1, num_buckets);
@@ -83,9 +86,11 @@ static int ht_get_hash(const char* s, const int num_buckets,
 
 //重新分配大小
 static void ht_resize(ht_hash_table* ht, const int base_size) {
+    //size小于初始容量时不再减少
     if (base_size < HT_INITIAL_BASE_SIZE) {
         return;
     }
+    //新建一张表，并复制原表的所有数据
     ht_hash_table* new_ht = ht_new_sized(base_size);
     for (int i = 0; i < ht->size; i++) {
         ht_item* item = ht->items[i];
@@ -94,18 +99,21 @@ static void ht_resize(ht_hash_table* ht, const int base_size) {
         }
     }
 
+    //修改原表的属性
     ht->base_size = new_ht->base_size;
     ht->count = new_ht->count;
 
-    // To delete new_ht, we give it ht's size and items
+    //为了删除新表，将原表的size与base_size属性赋值给新表
     const int tmp_size = ht->size;
     ht->size = new_ht->size;
     new_ht->size = tmp_size;
 
+    //将原表与新表的内容items交换
     ht_item** tmp_items = ht->items;
     ht->items = new_ht->items;
     new_ht->items = tmp_items;
 
+    //删除新表
     ht_del_hash_table(new_ht);
 }
 

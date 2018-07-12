@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "src/hash_table.h"
-#include "src/prime.h"
 
 int main(int argc, char const* argv[]) {
     // new hashtable
