@@ -7,6 +7,7 @@
 
 #define HT_PRIME_1 151
 #define HT_PRIME_2 199
+#define HT_INITIAL_BASE_SIZE 50
 
 //删除标记
 static ht_item HT_DELETED_ITEM = {NULL, NULL};
@@ -15,8 +16,12 @@ static ht_item HT_DELETED_ITEM = {NULL, NULL};
 //声明为 static 因为其只在 hashtable 内部调用
 static ht_item* ht_new_item(const char* k, const char* v) {
     ht_item* i = malloc(sizeof(ht_item));
-    i->key = strdup(k);
-    i->value = strdup(v);
+    // i->key = strdup(k);
+    // i->value = strdup(v);
+    i->key = malloc(strlen(k) + 1);
+    strcpy(i->key, k);
+    i->value = malloc(strlen(v) + 1);
+    strcpy(i->value, v);
     return i;
 }
 
@@ -24,7 +29,7 @@ static ht_item* ht_new_item(const char* k, const char* v) {
 static ht_hash_table* ht_new_sized(const int base_size) {
     ht_hash_table* ht = malloc(sizeof(ht_hash_table));
     ht->base_size = base_size;
-    ht->size = next_prime(ht->size);
+    ht->size = next_prime(ht->base_size);
     ht->count = 0;
     ht->items = calloc((size_t)ht->size, sizeof(ht_item*));
     return ht;
@@ -33,9 +38,13 @@ ht_hash_table* ht_new() { return ht_new_sized(HT_INITIAL_BASE_SIZE); }
 
 //删除表元素
 static void ht_del_item(ht_item* i) {
-    free(i->key);
-    free(i->value);
-    free(i);
+    if (i == &HT_DELETED_ITEM) {
+        i = NULL;
+    } else {
+        free(i->key);
+        free(i->value);
+        free(i);
+    }
 }
 
 //删除表

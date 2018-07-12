@@ -1,8 +1,6 @@
 #ifndef HASH_TABLE_H
 #define HASH_TABLE_H
 
-#define HT_INITIAL_BASE_SIZE 50
-
 // hashtable 元素结构
 typedef struct {
     char* key;

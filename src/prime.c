@@ -1,5 +1,5 @@
-#include <math.h>
 #include "prime.h"
+#include <math.h>
 
 /*
  * Return whether x is prime or not
@@ -31,6 +31,7 @@ int is_prime(const int x) {
  * Return the next prime after x, or x if x is prime
  */
 int next_prime(int x) {
+    x++;
     while (is_prime(x) != 1) {
         x++;
     }

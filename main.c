@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./src/hash_table.h"
+#include "src/hash_table.h"
+#include "src/prime.h"
 
 int main(int argc, char const* argv[]) {
     // new hashtable
@@ -28,6 +29,6 @@ int main(int argc, char const* argv[]) {
 
     // delete hash table
     ht_del_hash_table(ht);
-    
+
     return 0;
 }
